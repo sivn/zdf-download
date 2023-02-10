@@ -66,7 +66,7 @@ class ZDFDownload():
         return "verfügbar bis" in result.text
 
 
-    def find_filename(self, download: DownloadConfiguration):
+    def find_filename(self, download: DownloadConfiguration, published: str):
         """Generate a new filename by adding one to the current newest filename."""
         #episode_files: List[str] = list(filter(lambda filename: download.filename in filename, sorted(os.listdir(download.folder))))
 
@@ -80,13 +80,12 @@ class ZDFDownload():
 
        # else:
        #     new_filename = download.filename + " S01E01"
-        today = date.today()
-        return download.filename + " vom " + today.strftime("%d-%m-%Y")
+        return download.filename + " vom " + date.strftime(published, "%d-%m-%Y")
 
 
-    def download_episode(self, url: str, download: DownloadConfiguration):
+    def download_episode(self, url: str, download: DownloadConfiguration, published: str):
         """Download episode using youtube-dl."""
-        filename = self.find_filename(download)
+        filename = self.find_filename(download, published)
         temp_path = "/temp" + "/" + filename + ".mp4"
         download_path = download.folder + "/" + filename + ".mp4"
         try:
@@ -105,7 +104,7 @@ class ZDFDownload():
         for entry in entries:
             if self.should_download(entry, show):
                 log.info('downloading episode %s: %s', entry.get("title"), entry.get("link"))
-                self.download_episode(entry.get("link"), show.download)
+                self.download_episode(entry.get("link"), show.download, entry.get("published"))
 
 
     def check_all_shows(self, shows: List[ShowConfiguration]) -> None:
