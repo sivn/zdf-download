@@ -76,7 +76,7 @@ class ZDFDownload():
             #filename_base: str = regex.group(1)
             #filename_number: str = regex.group(2)
             #new_episode_number = int(filename_number) + 1
-            #new_filename = filename_base + "{:0>2d}".format(new_episode_number)
+            #new_filename = filename_base + "{:0>2d}".format(new_episode_number)  
 
        # else:
        #     new_filename = download.filename + " S01E01"
