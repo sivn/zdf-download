@@ -3,6 +3,7 @@ import os
 import shutil
 import sys
 import re
+from datetime import date
 from typing import List
 
 import logging
@@ -65,30 +66,29 @@ class ZDFDownload():
         return "verfügbar bis" in result.text
 
 
-    def find_filename(self, download: DownloadConfiguration) -> str:
+    def find_filename(self, download: DownloadConfiguration):
         """Generate a new filename by adding one to the current newest filename."""
-        episode_files: List[str] = list(filter(lambda filename: download.filename in filename, sorted(os.listdir(download.folder))))
+        #episode_files: List[str] = list(filter(lambda filename: download.filename in filename, sorted(os.listdir(download.folder))))
 
-        if len(episode_files) > 0:
-            newest_filename = os.path.splitext(episode_files[-1])[0]
-            regex = re.match(r"^(.* S\d+E)(\d+)", newest_filename)
-            filename_base: str = regex.group(1)
-            filename_number: str = regex.group(2)
+        #if len(episode_files) > 0:
+            #newest_filename = os.path.splitext(episode_files[-1])[0]
+            #regex = re.match(r"^(.* S\d+E)(\d+)", newest_filename)
+            #filename_base: str = regex.group(1)
+            #filename_number: str = regex.group(2)
+            #new_episode_number = int(filename_number) + 1
+            #new_filename = filename_base + "{:0>2d}".format(new_episode_number)
 
-            new_episode_number = int(filename_number) + 1
-            new_filename = filename_base + "{:0>2d}".format(new_episode_number)
-
-        else:
-            new_filename = download.filename + " S01E01"
-
-        return new_filename
+       # else:
+       #     new_filename = download.filename + " S01E01"
+        today = date.today()
+        return download.filename + " " + today.strftime("%d.%m.%Y")
 
 
     def download_episode(self, url: str, download: DownloadConfiguration):
         """Download episode using youtube-dl."""
         filename = self.find_filename(download)
-        temp_path = "/temp" + "/" + filename + ".%(ext)s"
-        download_path = download.folder + "/" + filename + ".%(ext)s"
+        temp_path = "/temp" + "/" + filename + ".mp4"
+        download_path = download.folder + "/" + filename + ".mp4"
         try:
             subprocess.run(["youtube-dl", url, "-o", temp_path], check=True)
             shutil.move(temp_path, download_path)
