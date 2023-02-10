@@ -3,7 +3,7 @@ import os
 import shutil
 import sys
 import re
-from datetime import date
+from datetime import datetime
 from typing import List
 
 import logging
@@ -80,7 +80,8 @@ class ZDFDownload():
 
        # else:
        #     new_filename = download.filename + " S01E01"
-        return download.filename + " vom " + date.strftime(published, "%d-%m-%Y")
+        date = datetime.strftime(published, "%a, %d %b %Y %H:%M:%S +0100")
+        return download.filename + " vom " + date.strftime("%d-%m-%Y")
 
 
     def download_episode(self, url: str, download: DownloadConfiguration, published: str):
