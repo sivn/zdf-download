@@ -81,7 +81,7 @@ class ZDFDownload():
        # else:
        #     new_filename = download.filename + " S01E01"
         today = date.today()
-        return download.filename + " " + today.strftime("%d.%m.%Y")
+        return download.filename + " vom " + today.strftime("%d-%m-%Y")
 
 
     def download_episode(self, url: str, download: DownloadConfiguration):
