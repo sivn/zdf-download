@@ -1,5 +1,6 @@
 """Main module for the ZDF Downloader."""
 import os
+import shutil
 import sys
 import re
 from typing import List
@@ -86,9 +87,11 @@ class ZDFDownload():
     def download_episode(self, url: str, download: DownloadConfiguration):
         """Download episode using youtube-dl."""
         filename = self.find_filename(download)
+        temp_path = "/temp" + "/" + filename + ".%(ext)s"
         download_path = download.folder + "/" + filename + ".%(ext)s"
         try:
-            subprocess.run(["youtube-dl", url, "-o", download_path], check=True)
+            subprocess.run(["youtube-dl", url, "-o", temp_path], check=True)
+            shutil.move(temp_path, download_path)
             self.history.add_to_history(url)
         except subprocess.CalledProcessError:
             log.error('error downloading %s', url)
